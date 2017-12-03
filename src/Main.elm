@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, text, div, h1, img)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (src)
+import Html.Attributes exposing (src, class, href, target)
 import Http
 import Json.Decode as Json
 import Navigation
@@ -91,21 +91,73 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    case model.loginData of
-    Just loginData -> 
-        div [] 
+    let content =        
+        case model.loginData of
+        Just loginData -> 
+            div [] 
+            [
+                Html.span [] [ Html.text ("User: " ++ loginData.userName) ],
+                Html.br [][],
+                Html.button [ onClick DownloadArticles ] [text "Download articles"] ,
+                Html.br [][],
+                Html.ul [] (List.map articleView model.articles)
+            ]
+        Nothing -> 
+            Html.header [class "masthead"] 
+            [
+                div [class "container h-100"]
+                [
+                    div [class "row h-100"] 
+                    [
+                        div [class "col-lg-12 my-auto"] 
+                        [
+                            div [class "header-content"]
+                            [
+                                Html.h1 [] [ Html.text "ARTICLES DISPENSER"],
+                                Html.h4 [class "mb-5"] [ text "Pocket client for those who want to efficiently handle a large number of articles."],
+                                Html.a [onClick Login, class "btn btn-outline btn-xl"] [text "Login and start"]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+    in
+     div [] 
+     [
+      content,
+      footerView model
+     ]
+
+
+footerView : Model -> Html Msg
+footerView model =
+    Html.footer []
+    [
+        Html.div [ class "container"] 
         [
-            Html.span [] [ Html.text ("User: " ++ loginData.userName) ],
-            Html.br [][],
-            Html.button [ onClick DownloadArticles ] [text "Download articles"] ,
-            Html.br [][],
-            Html.ul [] (List.map articleView model.articles)
+            Html.p [] 
+            [
+                Html.text "©2017 Articles Dispenser. All Rights Reserved.",
+                Html.ul [ class "list-inline"] 
+                [
+                    Html.li [class "list-inline-item"]
+                    [
+                        Html.a [ href "https://twitter.com/miroveith", target "_blank" ]
+                        [
+                            Html.i [class "fa fa-twitter"][]
+                        ]
+                    ],
+                    Html.li [class "list-inline-item"]
+                    [
+                        Html.a [ href "https://github.com/mveith/articles-dispenser-web", target "_blank" ]
+                        [
+                            Html.i [class "fa fa-github"][]
+                        ]
+                    ]
+                ]
+            ]
         ]
-    Nothing -> 
-        div []
-        [
-            Html.button [ onClick Login ] [text "Login"] 
-        ]
+    ]
 
 articleView: Article -> Html Msg
 articleView article=
