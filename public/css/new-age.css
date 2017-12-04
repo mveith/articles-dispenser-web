@@ -439,7 +439,7 @@ footer ul li a.active {
     background-color: #fdcc52;
 }
 
-.btn {
+.btn-rounded {
     border-radius: 300px;
     font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
     letter-spacing: 2px;

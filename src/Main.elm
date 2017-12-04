@@ -2,11 +2,12 @@ module Main exposing (..)
 
 import Html exposing (Html, text, div, h1, img)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (src, class, href, target)
+import Html.Attributes exposing (src, class, href, target, id)
 import Http
 import Json.Decode as Json
 import Navigation
 import Date
+import Date.Format
 
 ---- PROGRAM ----
 
@@ -82,9 +83,7 @@ update msg model =
             Just data -> ( model, downloadArticles data.accessToken)
             Nothing -> ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> ({ model | articles = articles}, Cmd.none)
-        DownloadedArticles (Err e) -> 
-            Debug.log (toString e)
-            ( model, Cmd.none)
+        DownloadedArticles (Err e) -> ( model, Cmd.none)
 
 
 ---- VIEW ----
@@ -96,14 +95,27 @@ view model =
         Just loginData -> 
             div [] 
             [
-                Html.span [] [ Html.text ("User: " ++ loginData.userName) ],
-                Html.br [][],
-                Html.button [ onClick DownloadArticles ] [text "Download articles"] ,
-                Html.br [][],
-                Html.ul [] (List.map articleView model.articles)
+                Html.nav [class "navbar navbar-expand-lg navbar-light fixed-top navbar-shrink", id "mainNav"]
+                [
+                    div [class "container"]
+                    [
+                        Html.a [class "navbar-brand js-scroll-trigger", href "#page-top"] [text "ARTICLES DISPENSER"],
+                        Html.ul [class "navbar-nav ml-auto"]
+                        [
+                            Html.li [class "nav-item"][ Html.a [class "nav-link js-scroll-trigger"][ text loginData.userName]]
+                        ]
+                    ]
+                ],
+                Html.section [class "articles h-100"]
+                [                    
+                    Html.a [ onClick DownloadArticles, class "btn btn-outline-primary btn-lg", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
+                    Html.br[][],
+                    Html.br[][],
+                    div [class "list-group"] (List.indexedMap articleRow (List.reverse model.articles))
+                ]
             ]
         Nothing -> 
-            Html.header [class "masthead"] 
+            Html.header [class "masthead h-100"] 
             [
                 div [class "container h-100"]
                 [
@@ -115,14 +127,14 @@ view model =
                             [
                                 Html.h1 [] [ Html.text "ARTICLES DISPENSER"],
                                 Html.h4 [class "mb-5"] [ text "Pocket client for those who want to efficiently handle a large number of articles."],
-                                Html.a [onClick Login, class "btn btn-outline btn-xl"] [text "Login and start"]
+                                Html.a [onClick Login, class "btn-rounded btn-outline btn-xl"] [text "Login and start"]
                             ]
                         ]
                     ]
                 ]
             ]
     in
-     div [] 
+     div [class "h-100"] 
      [
       content,
       footerView model
@@ -159,9 +171,29 @@ footerView model =
         ]
     ]
 
-articleView: Article -> Html Msg
-articleView article=
-    Html.li [][Html.text article.title]
+articleRow: Int -> Article -> Html Msg
+articleRow index article=
+    Html.a [class "list-group-item list-group-item-action flex-column align-items-start"] 
+    [
+        Html.h5 [class "mb-1 word-wrap article-title"][text article.title],
+        Html.p [class "text-left"] [Html.small [] [Html.strong [] [text "Tags: "], (text (String.join ", " article.tags))]],
+        Html.span [ class "float-left"] 
+        [
+            Html.a [href article.url, target "_blank"] [Html.i [class "fa fa-link"][] ],
+            text " ",
+            Html.a [href ("https://getpocket.com/a/read/" ++ article.id), target "_blank"] [Html.i [class "fa fa-get-pocket"][] ]
+        ],
+        Html.span [ class "float-right"] 
+        [
+            Html.small [] [(text (dateView article.added))]
+        ]
+    ]
+
+dateView : Maybe Date.Date -> String
+dateView date =
+    case date of
+    Just d -> Date.Format.format "%d/%m/%Y" d
+    Nothing -> ""
 
 -- HTTP
 
