@@ -8,6 +8,8 @@ import Json.Decode as Json
 import Navigation
 import Date
 import Date.Format
+import Random
+import Random.List
 
 ---- PROGRAM ----
 
@@ -28,9 +30,9 @@ init location =
          authorizedRequestToken = List.head (List.reverse (String.split "=" location.search))
         in
          case authorizedRequestToken of
-         Just token -> ( Model Nothing location.origin [], getAccessToken token)
-         Nothing -> ( Model Nothing location.origin [], Cmd.none )
-    _-> ( Model Nothing location.origin [], Cmd.none )
+         Just token -> ( Model Nothing location.origin [] Nothing, getAccessToken token)
+         Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )
+    _-> ( Model Nothing location.origin []Nothing, Cmd.none )
 
 ---- MODEL ----
 
@@ -38,7 +40,8 @@ type alias Model =
     {
         loginData : Maybe LoginData,
         url : String,
-        articles : List Article
+        articles : List Article,
+        randomArticle : Maybe Article
     }
 
 type alias LoginData =
@@ -68,6 +71,8 @@ type Msg
     | LoggedIn (Result Http.Error LoginData)
     | DownloadArticles
     | DownloadedArticles (Result Http.Error (List Article))
+    | GenerateRandomArticle
+    | RandomizedArticles (List Article)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -82,8 +87,10 @@ update msg model =
             case model.loginData of
             Just data -> ( model, downloadArticles data.accessToken)
             Nothing -> ( model, Cmd.none)
-        DownloadedArticles (Ok articles) -> ({ model | articles = articles}, Cmd.none)
+        DownloadedArticles (Ok articles) -> ({ model | articles = articles}, randomizeArticles articles)
         DownloadedArticles (Err e) -> ( model, Cmd.none)
+        GenerateRandomArticle -> (model, randomizeArticles model.articles)
+        RandomizedArticles a -> ( { model | randomArticle = (List.head a)}, Cmd.none)
 
 
 ---- VIEW ----
@@ -108,7 +115,9 @@ view model =
                 ],
                 Html.section [class "articles h-100"]
                 [                    
-                    Html.a [ onClick DownloadArticles, class "btn btn-outline-primary btn-lg mb-5", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
+                    Html.a [ onClick DownloadArticles, class "btn btn-outline-primary mb-2", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
+                    Html.br[][],
+                    randomArticleButton model.randomArticle,
                     div [class "list-group"] (List.indexedMap articleRow (List.reverse model.articles))
                 ]
             ]
@@ -194,6 +203,16 @@ dateView date =
     Just d -> Date.Format.format "%d/%m/%Y" d
     Nothing -> ""
 
+randomArticleButton : Maybe Article -> Html Msg
+randomArticleButton article=
+    case article of
+    Just a -> 
+        div [class "mb-1 text-left"] 
+            [
+                Html.a [ onClick GenerateRandomArticle, href ("https://getpocket.com/a/read/" ++ a.id), target "_blank", class "btn btn-outline-secondary", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Random"]
+            ]
+    Nothing -> div[][]
+
 
 lengthView : Maybe Int -> String
 lengthView length =
@@ -201,7 +220,7 @@ lengthView length =
     Just v -> (toString v) ++ " words"
     Nothing -> ""
 
--- HTTP
+-- EFFECTS
 
 apiUrl : String
 apiUrl = "https://2gf3hu5hsh.execute-api.us-east-1.amazonaws.com/dev"
@@ -273,4 +292,8 @@ decodeInt value =
         case String.toInt v of
         Ok i -> Just i
         Err _ -> Nothing
-    Nothing -> Nothing
+    Nothing -> Nothing    
+    
+randomizeArticles: List Article -> Cmd Msg
+randomizeArticles articles =
+    Random.generate RandomizedArticles (Random.List.shuffle articles)
