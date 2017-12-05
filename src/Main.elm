@@ -198,7 +198,7 @@ dateView date =
 -- HTTP
 
 apiUrl : String
-apiUrl = "http://localhost:3000"
+apiUrl = "https://2gf3hu5hsh.execute-api.us-east-1.amazonaws.com/dev"
 
 getRequestToken : Cmd Msg
 getRequestToken=
