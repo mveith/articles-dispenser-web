@@ -115,11 +115,14 @@ view model =
                 ],
                 Html.section [class "articles h-100"]
                 [                    
+                    div [class "container"]
+                    [
                     Html.a [ onClick DownloadArticles, class "btn btn-outline-primary mb-2", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
                     Html.br[][],
                     randomArticleButton model.randomArticle,
                     div [class "list-group"] (List.indexedMap articleRow (List.reverse model.articles))
                 ]
+            ]
             ]
         Nothing -> 
             Html.header [class "masthead h-100"] 
