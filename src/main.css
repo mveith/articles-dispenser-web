@@ -27,3 +27,7 @@ img {
 .article-title {
     font-family: 'Helvetica', 'Arial', 'sans-serif';
 }
+
+.article-links {
+    font-size: 20px;
+}

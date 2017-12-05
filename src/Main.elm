@@ -108,9 +108,7 @@ view model =
                 ],
                 Html.section [class "articles h-100"]
                 [                    
-                    Html.a [ onClick DownloadArticles, class "btn btn-outline-primary btn-lg", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
-                    Html.br[][],
-                    Html.br[][],
+                    Html.a [ onClick DownloadArticles, class "btn btn-outline-primary btn-lg mb-5", Html.Attributes.attribute "role" "button", Html.Attributes.attribute "aria-pressed" "true" ][ text "Download articles"],
                     div [class "list-group"] (List.indexedMap articleRow (List.reverse model.articles))
                 ]
             ]
@@ -176,8 +174,9 @@ articleRow index article=
     Html.a [class "list-group-item list-group-item-action flex-column align-items-start"] 
     [
         Html.h5 [class "mb-1 word-wrap article-title"][text article.title],
-        Html.p [class "text-left"] [Html.small [] [Html.strong [] [text "Tags: "], (text (String.join ", " article.tags))]],
-        Html.span [ class "float-left"] 
+        Html.p [class "text-left mb-0"] [Html.small [] [Html.strong [] [text "Tags: "], (text (String.join ", " article.tags))]],
+        Html.p [class "text-left mb-1"] [Html.small [] [Html.strong [] [text "Length: "], (text (lengthView article.length))]],
+        Html.span [ class "float-left article-links"] 
         [
             Html.a [href article.url, target "_blank"] [Html.i [class "fa fa-link"][] ],
             text " ",
@@ -193,6 +192,13 @@ dateView : Maybe Date.Date -> String
 dateView date =
     case date of
     Just d -> Date.Format.format "%d/%m/%Y" d
+    Nothing -> ""
+
+
+lengthView : Maybe Int -> String
+lengthView length =
+    case length of
+    Just v -> (toString v) ++ " words"
     Nothing -> ""
 
 -- HTTP
