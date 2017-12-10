@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Navigation
-import Model exposing (Model)
+import Model exposing (Model, LoginData)
 import Update exposing (update)
 import Effects
 import Messages exposing (Msg)
@@ -9,17 +9,17 @@ import View exposing (view)
 
 ---- PROGRAM ----
 
-main : Program Never Model Msg
+main : Program (Maybe LoginData) Model Msg
 main =
-    Navigation.program Messages.UrlChange
+    Navigation.programWithFlags Messages.UrlChange
         { view = view
         , init = init
         , update = update
         , subscriptions = always Sub.none
         }
 
-init :Navigation.Location -> ( Model, Cmd Msg )
-init location =
+init : Maybe LoginData -> Navigation.Location -> ( Model, Cmd Msg )
+init loginData location =
     case location.pathname of
     "/authorized"-> 
         let
@@ -28,4 +28,4 @@ init location =
          case authorizedRequestToken of
          Just token -> ( Model Nothing location.origin [] Nothing, Effects.getAccessToken token)
          Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )
-    _-> ( Model Nothing location.origin [] Nothing, Cmd.none )
+    _-> ( Model loginData location.origin [] Nothing, Cmd.none )

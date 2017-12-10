@@ -1,4 +1,4 @@
-module Update exposing (..)
+port module Update exposing (..)
 
 import Http
 import Navigation
@@ -6,6 +6,8 @@ import Random
 import Model exposing (Model, LoginData, Article)
 import Messages exposing (..)
 import Effects exposing (..)
+
+port saveLoginData : LoginData -> Cmd msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -19,7 +21,7 @@ update msg model =
         UrlChange location -> 
             ( model, Cmd.none)
         LoggedIn (Ok login) -> 
-            ( {model | loginData = Just login} , Navigation.modifyUrl "/")
+            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveLoginData login ])
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadArticles -> 
