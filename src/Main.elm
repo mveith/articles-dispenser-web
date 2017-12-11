@@ -28,4 +28,7 @@ init loginData location =
          case authorizedRequestToken of
          Just token -> ( Model Nothing location.origin [] Nothing, Effects.getAccessToken token)
          Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )
-    _-> ( Model loginData location.origin [] Nothing, Cmd.none )
+    _-> 
+        case loginData of
+        Just v ->( Model (Just v) location.origin [] Nothing, Effects.downloadArticles v.accessToken )
+        Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )

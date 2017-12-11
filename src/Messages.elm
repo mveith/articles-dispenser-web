@@ -10,7 +10,6 @@ type Msg
     | NewRequestToken (Result Http.Error String)
     | UrlChange Navigation.Location
     | LoggedIn (Result Http.Error LoginData)
-    | DownloadArticles
     | DownloadedArticles (Result Http.Error (List Article))
     | GenerateRandomArticle
     | RandomizedArticles (List Article)

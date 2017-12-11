@@ -31,3 +31,7 @@ img {
 .article-links {
     font-size: 20px;
 }
+
+section {
+    padding: 60px 0;
+}

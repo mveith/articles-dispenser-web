@@ -21,13 +21,9 @@ update msg model =
         UrlChange location -> 
             ( model, Cmd.none)
         LoggedIn (Ok login) -> 
-            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveLoginData login ])
+            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveLoginData login, downloadArticles login.accessToken ])
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
-        DownloadArticles -> 
-            case model.loginData of
-            Just data -> ( model, downloadArticles data.accessToken)
-            Nothing -> ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
             ({ model | articles = articles}, randomizeArticles articles)
         DownloadedArticles (Err e) -> 

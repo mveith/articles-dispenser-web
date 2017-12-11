@@ -14,7 +14,6 @@ articlesView model =
         [                    
             div [class "container"]
             [
-                div [class "update"] [ downloadArticlesButton ],                
                 div [class "dispenser-buttons" ][ randomArticleButton model.randomArticle ],
                 div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
             ]
@@ -52,17 +51,6 @@ articleRow index article=
             Html.small [] [(text (dateView article.added))]
         ]
     ]
-
-downloadArticlesButton : Html Msg
-downloadArticlesButton =
-    Html.a 
-    [ 
-        onClick DownloadArticles, 
-        class "btn btn-outline-primary mb-2", 
-        attribute "role" "button", 
-        attribute "aria-pressed" "true" 
-    ]
-    [ text "Download articles"]
 
 dateView : Maybe Date.Date -> String
 dateView date =
