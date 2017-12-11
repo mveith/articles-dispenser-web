@@ -35,3 +35,8 @@ img {
 section {
     padding: 60px 0;
 }
+
+.btn:focus,
+.btn:active {
+    box-shadow: 0 0 0 0;
+}
