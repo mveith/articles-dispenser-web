@@ -14,8 +14,25 @@ articlesView model =
         [                    
             div [class "container"]
             [
-                div [class "dispenser-buttons" ][ randomArticleButton model.randomArticle ],
-                div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
+                div [class "row"]
+                (if (not (List.isEmpty model.articles)) then 
+                    [                        
+                        div [class "col-lg-9" ]
+                        [
+                            div [class "dispenser-buttons" ][ randomArticleButton model.randomArticle ],
+                            div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
+                        ],
+                        div [class "statistics col-lg-3"] 
+                        [ 
+                            h1 [] [text  "Statistics:"],
+                            Html.span [] 
+                            [
+                                Html.strong [] [text "Count: "],
+                                text (toString (List.length model.articles) ++ " articles")
+                            ]
+                        ]
+                    ]
+                else [])
             ]
         ]
 
