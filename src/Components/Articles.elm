@@ -45,11 +45,17 @@ articlesView model =
                         div [class "statistics col-lg-3"] 
                         [ 
                             h1 [] [text  "Statistics:"],
-                            Html.span [] 
+                            Html.div [] 
                             [
-                                Html.strong [] [text "Count: "],
+                                Html.strong [] [text "Total: "],
+                                text (toString (List.length model.allArticles) ++ " articles")
+                            ],
+                            Html.div [] 
+                            (if (List.length model.allArticles) == (List.length model.articles) then [] else
+                            [
+                                Html.strong [] [text "Filtered: "],
                                 text (toString (List.length model.articles) ++ " articles")
-                            ]
+                            ])
                         ]
                     ]
                 else [])
