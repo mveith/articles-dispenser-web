@@ -35,5 +35,9 @@ update msg model =
         TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
         Filter -> 
             case model.tagsFilter of
-            Just f -> ({model| articles = sort (filterArticles f model.allArticles)}, Cmd.none)
+            Just f -> 
+                let
+                    articles = sort (filterArticles f model.allArticles)
+                in
+                 ({model| articles = articles}, randomizeArticles articles)
             Nothing -> ({model| articles = sort model.allArticles}, Cmd.none)
