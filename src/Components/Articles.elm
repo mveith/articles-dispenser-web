@@ -7,6 +7,7 @@ import Date
 import Date.Format
 import Model exposing (Model, Article)
 import Messages exposing (..)
+import Json.Decode as Json
 
 articlesView : Model -> Html Msg
 articlesView model =
@@ -24,7 +25,7 @@ articlesView model =
                                 div [ class "form-group"] 
                                 [
                                     Html.label [Html.Attributes.for "tagsInput"] [text "Tags:"],
-                                    Html.input [id "tagsInput", Html.Attributes.type_ "text", Html.Attributes.placeholder "", onInput Messages.TagsFilter, class "form-control", Html.Attributes.attribute "describedBy" "tagsHelp"] [],
+                                    Html.input [id "tagsInput", Html.Attributes.type_ "text", Html.Attributes.placeholder "", onInput Messages.TagsFilter, class "form-control", Html.Attributes.attribute "describedBy" "tagsHelp", onEnter Filter] [],
                                     Html.small [id "tagsHelp", class "form-text text-muted"][text "Tags separated by a semicolon. For untagged only articles use ", Html.i [] [text "_untagged_"], text "."]
                                 ],
                                 div [ class "form-group"]
@@ -132,3 +133,9 @@ readLink : Article -> String
 readLink article =
     "https://getpocket.com/a/read/" ++ article.id
 
+onEnter : Msg -> Html.Attribute Msg
+onEnter msg =
+    let
+        isEnter code = if code == 13 then Json.succeed msg else Json.fail "not ENTER"
+    in        
+        Html.Events.on "keydown" (Json.andThen isEnter Html.Events.keyCode)
