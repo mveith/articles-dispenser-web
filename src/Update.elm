@@ -33,11 +33,15 @@ update msg model =
         RandomizedArticles a -> 
             ( { model | randomArticle = (List.head a)}, Cmd.none)
         TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
+        MaxLengthFilter value -> 
+            let
+                intValue = Result.withDefault -1 (String.toInt value)
+                maxLength = if intValue > 0 then Just intValue else Nothing
+            in
+             ({model | maxLengthFilter = maxLength } , Cmd.none)
+
         Filter -> 
-            case model.tagsFilter of
-            Just f -> 
-                let
-                    articles = sort (filterArticles f model.allArticles)
-                in
-                 ({model| articles = articles}, randomizeArticles articles)
-            Nothing -> ({model| articles = sort model.allArticles}, Cmd.none)
+            let
+                articles = sort (filterArticles model model.allArticles)
+            in
+                ({model| articles = articles}, randomizeArticles articles)

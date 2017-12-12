@@ -9,7 +9,8 @@ type alias Model =
         articles : List Article,
         randomArticle : Maybe Article,
         tagsFilter : Maybe String,
-        allArticles : List Article
+        allArticles : List Article,
+        maxLengthFilter : Maybe Int
     }
 
 type alias LoginData =

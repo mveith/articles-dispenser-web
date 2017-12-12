@@ -89,17 +89,30 @@ randomizeArticles: List Article -> Cmd Msg
 randomizeArticles articles =
     Random.generate Messages.RandomizedArticles (Random.List.shuffle articles)
 
-filterArticles: String -> List Article -> List Article
-filterArticles tagsValue articles=
+filterArticles: Model -> List Article -> List Article
+filterArticles model articles=
     let
-        tags = List.filter isValidTag (String.split ";" tagsValue)
-        predicate = isArticleWithTags tags
+        tags = 
+            case model.tagsFilter of
+            Just tagsValue -> List.filter isValidTag (String.split ";" tagsValue)
+            Nothing -> []
+        tagsPredicate = isArticleWithTags tags
+        maxLengthPredicate = isArticleWithMaxLength model.maxLengthFilter
     in
-     if List.isEmpty tags then articles else List.filter predicate articles
+      List.filter maxLengthPredicate (List.filter tagsPredicate articles)
     
 isArticleWithTags: List String -> Article -> Bool
 isArticleWithTags tags article=
-    List.all (contains article.tags) tags
+    List.isEmpty tags || List.all (contains article.tags) tags
+
+isArticleWithMaxLength: Maybe Int -> Article -> Bool
+isArticleWithMaxLength maxLength article=
+    case maxLength of
+    Just max -> 
+        case article.length of
+        Just l -> l <= max
+        Nothing ->True
+    Nothing -> True
 
 isValidTag: String -> Bool
 isValidTag tag=

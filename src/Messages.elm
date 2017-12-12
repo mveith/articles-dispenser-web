@@ -14,4 +14,5 @@ type Msg
     | GenerateRandomArticle
     | RandomizedArticles (List Article)
     | TagsFilter String
+    | MaxLengthFilter String
     | Filter
