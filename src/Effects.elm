@@ -88,3 +88,33 @@ decodeInt value =
 randomizeArticles: List Article -> Cmd Msg
 randomizeArticles articles =
     Random.generate Messages.RandomizedArticles (Random.List.shuffle articles)
+
+filterArticles: String -> List Article -> List Article
+filterArticles tagsValue articles=
+    let
+        tags = List.filter isValidTag (String.split ";" tagsValue)
+        predicate = isArticleWithTags tags
+    in
+     if List.isEmpty tags then articles else List.filter predicate articles
+    
+isArticleWithTags: List String -> Article -> Bool
+isArticleWithTags tags article=
+    List.all (contains article.tags) tags
+
+isValidTag: String -> Bool
+isValidTag tag=
+    String.length tag > 0
+
+contains: List String -> String -> Bool
+contains tags tag=
+    if tag == "_untagged_" then List.isEmpty tags else List.member tag tags
+
+sort: List Article -> List Article
+sort articles =
+    List.sortBy sortValue articles
+
+sortValue: Article -> Float
+sortValue article =
+    case article.added of
+    Just d -> Date.toTime d
+    Nothing -> 0

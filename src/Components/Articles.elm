@@ -1,7 +1,7 @@
 module Components.Articles exposing (..)
 
 import Html exposing (Html, text, div, h1, img)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (src, class, href, target, id, attribute)
 import Date
 import Date.Format
@@ -15,11 +15,31 @@ articlesView model =
             div [class "container"]
             [
                 div [class "row"]
-                (if (not (List.isEmpty model.articles)) then 
+                (if (not (List.isEmpty model.allArticles)) then 
                     [                        
                         div [class "col-lg-9" ]
                         [
-                            div [class "dispenser-buttons" ][ randomArticleButton model.randomArticle ],
+                            div [class "filters text-left" ]
+                            [
+                                div [ class "form-group"] 
+                                [
+                                    Html.label [Html.Attributes.for "tagsInput"] [text "Tags:"],
+                                    Html.input [id "tagsInput", Html.Attributes.type_ "text", Html.Attributes.placeholder "", onInput Messages.TagsFilter, class "form-control", Html.Attributes.attribute "describedBy" "tagsHelp"] [],
+                                    Html.small [id "tagsHelp", class "form-text text-muted"][text "Tags separated by a semicolon. For untagged only articles use ", Html.i [] [text "_untagged_"], text "."]
+                                ],
+                                div [ class "form-group"]
+                                [
+                                    Html.a 
+                                    [ 
+                                        onClick Filter,
+                                        class "btn btn-outline-secondary text-center", 
+                                        attribute "role" "button", 
+                                        attribute "aria-pressed" "true" 
+                                    ]
+                                    [ text "Filter"]
+                                ]
+                            ],
+                            div [class "dispenser-buttons mb-2" ][ randomArticleButton model.randomArticle ],
                             div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
                         ],
                         div [class "statistics col-lg-3"] 
@@ -79,7 +99,7 @@ randomArticleButton : Maybe Article -> Html Msg
 randomArticleButton article=
     case article of
     Just a -> 
-        div [class "mb-1 text-left"] 
+        div [class "text-left"] 
             [
                 Html.a 
                 [ 

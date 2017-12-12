@@ -26,9 +26,9 @@ init loginData location =
          authorizedRequestToken = List.head (List.reverse (String.split "=" location.search))
         in
          case authorizedRequestToken of
-         Just token -> ( Model Nothing location.origin [] Nothing, Effects.getAccessToken token)
-         Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )
+         Just token -> ( Model Nothing location.origin [] Nothing Nothing [], Effects.getAccessToken token)
+         Nothing -> ( Model Nothing location.origin [] Nothing Nothing [], Cmd.none )
     _-> 
         case loginData of
-        Just v ->( Model (Just v) location.origin [] Nothing, Effects.downloadArticles v.accessToken )
-        Nothing -> ( Model Nothing location.origin [] Nothing, Cmd.none )
+        Just v ->( Model (Just v) location.origin [] Nothing Nothing [], Effects.downloadArticles v.accessToken )
+        Nothing -> ( Model Nothing location.origin [] Nothing Nothing [], Cmd.none )

@@ -13,3 +13,5 @@ type Msg
     | DownloadedArticles (Result Http.Error (List Article))
     | GenerateRandomArticle
     | RandomizedArticles (List Article)
+    | TagsFilter String
+    | Filter

@@ -25,10 +25,15 @@ update msg model =
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
-            ({ model | articles = articles}, randomizeArticles articles)
+            ({ model | articles = sort articles, allArticles = articles}, randomizeArticles articles)
         DownloadedArticles (Err e) -> 
             ( model, Cmd.none)
         GenerateRandomArticle -> 
             (model, randomizeArticles model.articles)
         RandomizedArticles a -> 
             ( { model | randomArticle = (List.head a)}, Cmd.none)
+        TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
+        Filter -> 
+            case model.tagsFilter of
+            Just f -> ({model| articles = sort (filterArticles f model.allArticles)}, Cmd.none)
+            Nothing -> ({model| articles = sort model.allArticles}, Cmd.none)

@@ -7,7 +7,9 @@ type alias Model =
         loginData : Maybe LoginData,
         url : String,
         articles : List Article,
-        randomArticle : Maybe Article
+        randomArticle : Maybe Article,
+        tagsFilter : Maybe String,
+        allArticles : List Article
     }
 
 type alias LoginData =
