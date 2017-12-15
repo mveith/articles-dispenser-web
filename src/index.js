@@ -1,10 +1,10 @@
 import './main.css';
 import { Main } from './Main.elm';
 
-var storedLoginData = localStorage.getItem('login-data');
-var loginData = storedLoginData ? JSON.parse(storedLoginData) : null;
-var app = Main.embed(document.getElementById('root'), loginData);
+var storedData = localStorage.getItem('model');
+var data = storedData ? JSON.parse(storedData) : null;
+var app = Main.embed(document.getElementById('root'), data);
 
-app.ports.saveLoginData.subscribe(function(data) {
-    localStorage.setItem('login-data', JSON.stringify(data));
+app.ports.saveData.subscribe(function(data) {
+    localStorage.setItem('model', JSON.stringify(data));
 });

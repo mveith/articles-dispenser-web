@@ -1,13 +1,15 @@
 port module Update exposing (..)
 
-import Http
 import Navigation
-import Random
 import Model exposing (Model, LoginData, Article)
 import Messages exposing (..)
 import Effects exposing (..)
+import Task
 
-port saveLoginData : LoginData -> Cmd msg
+port saveData : Model -> Cmd msg
+        
+saveModel: Cmd Msg
+saveModel = Task.succeed SaveModel |> Task.perform identity
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -21,11 +23,11 @@ update msg model =
         UrlChange location -> 
             ( model, Cmd.none)
         LoggedIn (Ok login) -> 
-            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveLoginData login, downloadArticles login.accessToken ])
+            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveModel, downloadArticles login.accessToken ])
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
-            ({ model | articles = sort articles, allArticles = articles}, randomizeArticles articles)
+            ({ model | articles = sort articles, allArticles = articles}, Cmd.batch [Effects.filter, randomizeArticles articles, saveModel])
         DownloadedArticles (Err e) -> 
             ( model, Cmd.none)
         GenerateRandomArticle -> 
@@ -44,4 +46,5 @@ update msg model =
             let
                 articles = sort (filterArticles model model.allArticles)
             in
-                ({model| articles = articles}, randomizeArticles articles)
+                ({model| articles = articles}, Cmd.batch [ randomizeArticles articles, saveModel])
+        SaveModel -> (model, saveData model)

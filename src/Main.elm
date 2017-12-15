@@ -9,7 +9,7 @@ import View exposing (view)
 
 ---- PROGRAM ----
 
-main : Program (Maybe LoginData) Model Msg
+main : Program (Maybe Model) Model Msg
 main =
     Navigation.programWithFlags Messages.UrlChange
         { view = view
@@ -18,8 +18,8 @@ main =
         , subscriptions = always Sub.none
         }
 
-init : Maybe LoginData -> Navigation.Location -> ( Model, Cmd Msg )
-init loginData location =
+init : Maybe Model -> Navigation.Location -> ( Model, Cmd Msg )
+init model location =
     case location.pathname of
     "/authorized"-> 
         let
@@ -29,6 +29,9 @@ init loginData location =
          Just token -> ( Model Nothing location.origin [] Nothing Nothing [] Nothing, Effects.getAccessToken token)
          Nothing -> ( Model Nothing location.origin [] Nothing Nothing [] Nothing, Cmd.none )
     _-> 
-        case loginData of
-        Just v ->( Model (Just v) location.origin [] Nothing Nothing [] Nothing, Effects.downloadArticles v.accessToken )
+        case model of
+        Just model ->
+            case model.loginData of
+            Just d -> (model, Cmd.batch [Effects.filter, Effects.downloadArticles d.accessToken])
+            Nothing -> (model, Cmd.none)
         Nothing -> ( Model Nothing location.origin [] Nothing Nothing [] Nothing, Cmd.none )

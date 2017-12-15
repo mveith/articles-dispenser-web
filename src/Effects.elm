@@ -1,17 +1,14 @@
 module Effects exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Events exposing (onClick)
-import Html.Attributes exposing (src, class, href, target, id)
 import Http
 import Json.Decode as Json
 import Navigation
 import Date
-import Date.Format
 import Random
 import Random.List
 import Model exposing (Model, LoginData, Article)
 import Messages exposing (Msg)
+import Task
 
 apiUrl : String
 apiUrl = "https://2gf3hu5hsh.execute-api.us-east-1.amazonaws.com/dev"
@@ -134,3 +131,6 @@ sortValue article =
         Ok d -> Date.toTime d
         Err _ -> 0
     Nothing -> 0
+
+filter: Cmd Msg
+filter = Task.succeed Messages.Filter |> Task.perform identity

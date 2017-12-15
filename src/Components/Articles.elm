@@ -2,7 +2,7 @@ module Components.Articles exposing (..)
 
 import Html exposing (Html, text, div, h1, img)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (src, class, href, target, id, attribute)
+import Html.Attributes exposing (src, class, href, target, id, attribute, value, type_, placeholder)
 import Date
 import Date.Format
 import Model exposing (Model, Article)
@@ -25,13 +25,13 @@ articlesView model =
                                 div [ class "form-group"] 
                                 [
                                     Html.label [Html.Attributes.for "tagsInput"] [text "Tags:"],
-                                    Html.input [id "tagsInput", Html.Attributes.type_ "text", Html.Attributes.placeholder "", onInput Messages.TagsFilter, class "form-control", Html.Attributes.attribute "describedBy" "tagsHelp", onEnter Filter] [],
+                                    Html.input [id "tagsInput", value (Maybe.withDefault "" model.tagsFilter), type_ "text", placeholder "", onInput Messages.TagsFilter, class "form-control", attribute "describedBy" "tagsHelp", onEnter Filter] [],
                                     Html.small [id "tagsHelp", class "form-text text-muted"][text "Tags separated by a semicolon. For untagged only articles use ", Html.i [] [text "_untagged_"], text "."]
                                 ],
                                 div [ class "form-group"] 
                                 [
                                     Html.label [Html.Attributes.for "maxLengthInput"] [text "Max length:"],
-                                    Html.input [id "maxLengthInput", Html.Attributes.type_ "number", onInput Messages.MaxLengthFilter, class "form-control", onEnter Filter] []
+                                    Html.input [id "maxLengthInput", value (Maybe.withDefault "" (Maybe.map toString model.maxLengthFilter)), type_ "number", onInput Messages.MaxLengthFilter, class "form-control", onEnter Filter] []
                                 ],
                                 div [ class "form-group"]
                                 [

@@ -16,3 +16,4 @@ type Msg
     | TagsFilter String
     | MaxLengthFilter String
     | Filter
+    | SaveModel
