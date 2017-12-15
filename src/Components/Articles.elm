@@ -101,10 +101,13 @@ articleRow index article=
         ]
     ]
 
-dateView : Maybe Date.Date -> String
+dateView : Maybe String -> String
 dateView date =
     case date of
-    Just d -> Date.Format.format "%d/%m/%Y" d
+    Just d -> 
+        case Date.fromString d of
+        Ok d -> Date.Format.format "%d/%m/%Y" d
+        Err _ -> ""
     Nothing -> ""
 
 randomArticleButton : Maybe Article -> Html Msg

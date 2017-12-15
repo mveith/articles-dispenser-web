@@ -68,12 +68,12 @@ decodeArticles =
             (Json.map decodeDate (Json.field "Added" Json.string))
             (Json.map decodeInt (Json.maybe (Json.field "WordCount" Json.string))))
 
-decodeDate : String -> Maybe Date.Date
+decodeDate : String -> Maybe String
 decodeDate date = 
     let result = Date.fromString date
     in
      case result of
-     Ok date -> Just date
+     Ok date -> Just (toString  date)
      Err _ -> Nothing
 
 decodeInt : Maybe String -> Maybe Int
@@ -129,5 +129,8 @@ sort articles =
 sortValue: Article -> Float
 sortValue article =
     case article.added of
-    Just d -> Date.toTime d
+    Just d -> 
+        case Date.fromString d of
+        Ok d -> Date.toTime d
+        Err _ -> 0
     Nothing -> 0

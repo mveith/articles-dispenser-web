@@ -26,7 +26,7 @@ type alias Article =
         title: String,
         excerpt: String,
         tags: List String,
-        added: Maybe Date.Date,
+        added: Maybe String,
         length: Maybe Int
     }
 
