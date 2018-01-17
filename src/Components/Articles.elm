@@ -26,7 +26,12 @@ articlesView model =
                                 [
                                     Html.label [Html.Attributes.for "tagsInput"] [text "Tags:"],
                                     Html.input [id "tagsInput", value (Maybe.withDefault "" model.tagsFilter), type_ "text", placeholder "", onInput Messages.TagsFilter, class "form-control", attribute "describedBy" "tagsHelp", onEnter Filter] [],
-                                    Html.small [id "tagsHelp", class "form-text text-muted"][text "Tags separated by a semicolon. For untagged only articles use ", Html.i [] [text "_untagged_"], text "."]
+                                    Html.small [id "tagsHelp", class "form-text text-muted"]
+                                    [
+                                        text "Tags separated by a semicolon. For untagged only articles use ", 
+                                        Html.a [onClick (TagsFilter "_untagged_"), class "clickable" ][ Html.i [] [text "_untagged_"]], 
+                                        text "."
+                                    ]
                                 ],
                                 div [ class "form-group"] 
                                 [

@@ -450,3 +450,7 @@ footer ul li a.active {
     font-size: 11px;
     padding: 15px 45px;
 }
+
+.clickable {
+    cursor: pointer;
+}
