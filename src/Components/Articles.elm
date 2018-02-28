@@ -8,6 +8,7 @@ import Date.Format
 import Model exposing (Model, Article)
 import Messages exposing (..)
 import Json.Decode as Json
+import Set
 
 articlesView : Model -> Html Msg
 articlesView model =
@@ -66,7 +67,14 @@ articlesView model =
                             [
                                 Html.strong [] [text "Filtered: "],
                                 text (toString (List.length model.articles) ++ " articles")
-                            ])
+                            ]),
+                            Html.br [][],
+                            Html.div []
+                            [
+                                Html.strong [] [text "Tags: "],
+                                Html.br [][],
+                                Html.div [class "tag-stats" ] (tags model.allArticles)
+                            ]
                         ]
                     ]
                 else [])
@@ -152,3 +160,18 @@ onEnter msg =
         isEnter code = if code == 13 then Json.succeed msg else Json.fail "not ENTER"
     in        
         Html.Events.on "keydown" (Json.andThen isEnter Html.Events.keyCode)
+
+tags : List Article ->  List (Html Msg)
+tags articles =
+    let
+        tags = 
+            ("_untagged_", articles |> List.filter(\a -> List.isEmpty a.tags)|> List.length) ::
+            (articles 
+            |> List.concatMap (\a -> a.tags) 
+            |> Set.fromList 
+            |> Set.toList 
+            |> List.map (\t -> (t, articles |> List.filter(\a -> List.member t a.tags)|> List.length)))
+    in
+        tags 
+        |> List.map (\(t, c) -> [Html.span [class "tag-label"][text t] ,Html.span [class "tag-items-count"] [text (toString c)]]) 
+        |> List.concat

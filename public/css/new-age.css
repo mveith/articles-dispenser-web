@@ -454,3 +454,17 @@ footer ul li a.active {
 .clickable {
     cursor: pointer;
 }
+
+.tag-stats {
+    display: grid;
+}
+
+.tag-label {
+    grid-column: 1;
+    text-align: left;
+}
+
+.tag-items-count {
+    grid-column: 2;
+    text-align: right;
+}
