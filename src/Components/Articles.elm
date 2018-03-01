@@ -173,5 +173,5 @@ tags articles =
             |> List.map (\t -> (t, articles |> List.filter(\a -> List.member t a.tags)|> List.length)))
     in
         tags 
-        |> List.map (\(t, c) -> [Html.span [class "tag-label"][text t] ,Html.span [class "tag-items-count"] [text (toString c)]]) 
+        |> List.map (\(t, c) -> [Html.span [class "tag-label clickable", onClick (TagsFilterAndExecute t)][text t] ,Html.span [class "tag-items-count"] [text (toString c)]]) 
         |> List.concat

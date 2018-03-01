@@ -2,7 +2,6 @@ module Messages exposing (..)
 
 import Http
 import Navigation
-import Date
 import Model exposing (Model, LoginData, Article)
 
 type Msg
@@ -14,6 +13,7 @@ type Msg
     | GenerateRandomArticle
     | RandomizedArticles (List Article)
     | TagsFilter String
+    | TagsFilterAndExecute String
     | MaxLengthFilter String
     | Filter
     | SaveModel

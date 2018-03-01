@@ -35,6 +35,7 @@ update msg model =
         RandomizedArticles a -> 
             ( { model | randomArticle = (List.head a)}, Cmd.none)
         TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
+        TagsFilterAndExecute value -> ({model | tagsFilter = Just value } , Cmd.batch [Effects.filter])
         MaxLengthFilter value -> 
             let
                 intValue = Result.withDefault -1 (String.toInt value)
