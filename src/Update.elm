@@ -27,7 +27,7 @@ update msg model =
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
-            ({ model | articles = sort articles, allArticles = articles}, Cmd.batch [Effects.filter, randomizeArticles articles, saveModel])
+            ({ model | articles = sort articles, allArticles = articles}, Effects.filter )
         DownloadedArticles (Err e) -> 
             ( model, Cmd.none)
         GenerateRandomArticle -> 
@@ -35,7 +35,7 @@ update msg model =
         RandomizedArticles a -> 
             ( { model | randomArticle = (List.head a)}, Cmd.none)
         TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
-        TagsFilterAndExecute value -> ({model | tagsFilter = Just value } , Cmd.batch [Effects.filter])
+        TagsFilterAndExecute value -> ({model | tagsFilter = Just value } , Effects.filter )
         MaxLengthFilter value -> 
             let
                 intValue = Result.withDefault -1 (String.toInt value)
