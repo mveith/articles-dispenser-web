@@ -84,7 +84,7 @@ articlesView model =
 
 articleRow: Int -> Article -> Html Msg
 articleRow index article=
-    Html.a [class "list-group-item list-group-item-action flex-column align-items-start"] 
+    Html.div [class "list-group-item list-group-item-action flex-column align-items-start"] 
     [
         Html.h5 [class "mb-1 word-wrap article-title"][text article.title],
         Html.p [class "text-left mb-0"] 
