@@ -147,7 +147,16 @@ randomArticleButton article=
 lengthView : Maybe Int -> String
 lengthView length =
     case length of
-    Just v -> (String.fromInt v) ++ " words"
+    Just v -> 
+        case v of
+        0 -> ""
+        l ->
+            let
+                minutes =  ceiling ((toFloat l) / 225)
+                units = case minutes of 
+                    1 -> "minute"
+                    _ -> "minutes"
+            in String.concat [String.fromInt l, " words ", "(", String.fromInt minutes, " ", units, ")"]
     Nothing -> ""
 
 
