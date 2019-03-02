@@ -20,7 +20,7 @@ Web application dispensing articles of [Pocket](https://getpocket.com)
 [New Age Template](https://startbootstrap.com/template-overviews/new-age/)
 
 ### Backend
-[articles-dispenser-api](https://github.com/mveith/articles-dispenser-api) - AWS Lambda TypeScript functions
+[articles-dispenser-api](https://github.com/mveith/articles-dispenser-api) - AWS Lambda functions
 
 ### Hosting
 [netlify](https://www.netlify.com/) => [https://articles-dispenser.mveith.com/](https://articles-dispenser.mveith.com/)
