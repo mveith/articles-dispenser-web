@@ -1,12 +1,12 @@
 port module Update exposing (..)
 
-import Navigation
-import Model exposing (Model, LoginData, Article)
+import Browser.Navigation as Nav
+import Model exposing (Model, ModelDto, LoginData, Article)
 import Messages exposing (..)
 import Effects exposing (..)
 import Task
 
-port saveData : Model -> Cmd msg
+port saveData : ModelDto -> Cmd msg
         
 saveModel: Cmd Msg
 saveModel = Task.succeed SaveModel |> Task.perform identity
@@ -20,10 +20,8 @@ update msg model =
             ( model, navigateToLoginPage newRequestToken model.url)
         NewRequestToken (Err _) -> 
             ( model, Cmd.none)
-        UrlChange location -> 
-            ( model, Cmd.none)
         LoggedIn (Ok login) -> 
-            ( {model | loginData = Just login} , Cmd.batch[ Navigation.modifyUrl "/", saveModel, downloadArticles login.accessToken ])
+            ( {model | loginData = Just login} , Cmd.batch[ Nav.replaceUrl model.key "/", saveModel, downloadArticles login.accessToken ])
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
@@ -38,7 +36,7 @@ update msg model =
         TagsFilterAndExecute value -> ({model | tagsFilter = Just value } , Effects.filter )
         MaxLengthFilter value -> 
             let
-                intValue = Result.withDefault -1 (String.toInt value)
+                intValue = Maybe.withDefault -1 (String.toInt value)
                 maxLength = if intValue > 0 then Just intValue else Nothing
             in
              ({model | maxLengthFilter = maxLength } , Cmd.none)
@@ -48,4 +46,6 @@ update msg model =
                 articles = sort (filterArticles model model.allArticles)
             in
                 ({model| articles = articles}, Cmd.batch [ randomizeArticles articles, saveModel])
-        SaveModel -> (model, saveData model)
+        SaveModel -> (model, saveData (ModelDto model.loginData model.tagsFilter model.maxLengthFilter model.allArticles))
+        LinkClicked _ -> ( model, Cmd.none)
+        UrlChanged _ -> ( model, Cmd.none)

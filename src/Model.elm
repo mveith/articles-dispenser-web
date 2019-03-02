@@ -1,6 +1,6 @@
 module Model exposing (..)
 
-import Date
+import Browser.Navigation as Nav
 
 type alias Model =
     {
@@ -10,7 +10,16 @@ type alias Model =
         randomArticle : Maybe Article,
         tagsFilter : Maybe String,
         allArticles : List Article,
-        maxLengthFilter : Maybe Int
+        maxLengthFilter : Maybe Int,
+        key : Nav.Key
+    }
+
+type alias ModelDto =
+    {
+        loginData : Maybe LoginData,
+        tagsFilter : Maybe String,
+        maxLengthFilter : Maybe Int,
+        allArticles : List Article
     }
 
 type alias LoginData =

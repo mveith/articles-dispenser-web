@@ -3,12 +3,13 @@ module Components.Articles exposing (..)
 import Html exposing (Html, text, div, h1, img)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (src, class, href, target, id, attribute, value, type_, placeholder)
-import Date
-import Date.Format
 import Model exposing (Model, Article)
 import Messages exposing (..)
 import Json.Decode as Json
 import Set
+import DateFormat
+import Time
+import Iso8601
 
 articlesView : Model -> Html Msg
 articlesView model =
@@ -37,7 +38,7 @@ articlesView model =
                                 div [ class "form-group"] 
                                 [
                                     Html.label [Html.Attributes.for "maxLengthInput"] [text "Max length:"],
-                                    Html.input [id "maxLengthInput", value (Maybe.withDefault "" (Maybe.map toString model.maxLengthFilter)), type_ "number", onInput Messages.MaxLengthFilter, class "form-control", onEnter Filter] []
+                                    Html.input [id "maxLengthInput", value (Maybe.withDefault "" (Maybe.map String.fromInt model.maxLengthFilter)), type_ "number", onInput Messages.MaxLengthFilter, class "form-control", onEnter Filter] []
                                 ],
                                 div [ class "form-group"]
                                 [
@@ -60,13 +61,13 @@ articlesView model =
                             Html.div [] 
                             [
                                 Html.strong [] [text "Total: "],
-                                text (toString (List.length model.allArticles) ++ " articles")
+                                text (String.fromInt (List.length model.allArticles) ++ " articles")
                             ],
                             Html.div [] 
                             (if (List.length model.allArticles) == (List.length model.articles) then [] else
                             [
                                 Html.strong [] [text "Filtered: "],
-                                text (toString (List.length model.articles) ++ " articles")
+                                text (String.fromInt (List.length model.articles) ++ " articles")
                             ]),
                             Html.br [][],
                             Html.div []
@@ -115,11 +116,11 @@ articleRow index article=
     ]
 
 dateView : Maybe String -> String
-dateView date =
+dateView date =    
     case date of
     Just d -> 
-        case Date.fromString d of
-        Ok d -> Date.Format.format "%d/%m/%Y" d
+        case Iso8601.toTime d of 
+        Ok dateTime -> formatDate dateTime
         Err _ -> ""
     Nothing -> ""
 
@@ -146,7 +147,7 @@ randomArticleButton article=
 lengthView : Maybe Int -> String
 lengthView length =
     case length of
-    Just v -> (toString v) ++ " words"
+    Just v -> (String.fromInt v) ++ " words"
     Nothing -> ""
 
 
@@ -164,7 +165,7 @@ onEnter msg =
 tags : List Article ->  List (Html Msg)
 tags articles =
     let
-        tags = 
+        tagsList = 
             ("_untagged_", articles |> List.filter(\a -> List.isEmpty a.tags)|> List.length) ::
             (articles 
             |> List.concatMap (\a -> a.tags) 
@@ -172,6 +173,18 @@ tags articles =
             |> Set.toList 
             |> List.map (\t -> (t, articles |> List.filter(\a -> List.member t a.tags)|> List.length)))
     in
-        tags 
-        |> List.map (\(t, c) -> [Html.span [class "tag-label clickable", onClick (TagsFilterAndExecute t)][text t] ,Html.span [class "tag-items-count"] [text (toString c)]]) 
+        tagsList 
+        |> List.map (\(t, c) -> [Html.span [class "tag-label clickable", onClick (TagsFilterAndExecute t)][text t] ,Html.span [class "tag-items-count"] [text (String.fromInt c)]]) 
         |> List.concat
+
+formatDate : Time.Posix -> String
+formatDate dateTime=
+    DateFormat.format
+        [ DateFormat.dayOfMonthNumber
+        , DateFormat.text "/"
+        , DateFormat.monthNumber
+        , DateFormat.text "/"
+        , DateFormat.yearNumber
+        ]
+        Time.utc
+        dateTime
