@@ -53,6 +53,17 @@ articlesView model =
                                 ]
                             ],
                             div [class "dispenser-buttons mb-2" ][ randomArticleButton model.randomArticle ],
+                            div [class "dispenser-buttons mb-2 text-left" ][                                 
+                                (buttonView "Newest first" (ChangeOrder Model.Newest)),
+                                text " ",
+                                (buttonView "Oldest first" (ChangeOrder Model.Oldest)),
+                                text " ",
+                                (buttonView "Longest first" (ChangeOrder Model.Longest)),
+                                text " ",
+                                (buttonView "Shortest first" (ChangeOrder Model.Shortest)),
+                                text " ",
+                                (buttonView "Randomize" (ChangeOrder Model.Random))
+                            ],
                             div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
                         ],
                         div [class "statistics col-lg-3"] 
@@ -139,10 +150,20 @@ randomArticleButton article=
                     attribute "role" "button", 
                     attribute "aria-pressed" "true" 
                 ]
-                [ text "Random"]
+                [ text "Open random"]
             ]
     Nothing -> div[][]
 
+buttonView : String -> Msg -> Html Msg
+buttonView label message =
+    Html.a 
+    [ 
+        onClick message, 
+        class "btn btn-outline-secondary", 
+        attribute "role" "button", 
+        attribute "aria-pressed" "true" 
+    ]
+    [ text label]
 
 lengthView : Maybe Int -> String
 lengthView length =

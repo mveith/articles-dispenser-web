@@ -119,18 +119,34 @@ contains: List String -> String -> Bool
 contains tags tag=
     if tag == "_untagged_" then List.isEmpty tags else List.member tag tags
 
-sort: List Article -> List Article
-sort articles =
-    List.sortBy sortValue articles
+sort: List Article -> Model.Ordering -> Cmd Msg
+sort articles ordering =
+    case ordering of
+    Model.Newest ->  sortBy articles articleAddedMiliseconds
+    Model.Longest -> sortBy articles (\a -> Maybe.withDefault 0 a.length)
+    Model.Shortest -> sortBy articles (\a -> if articleLength a == 0 then -1000000 else -(articleLength a))
+    Model.Oldest -> sortBy articles (\a -> -(articleAddedMiliseconds a))
+    Model.Random -> Random.generate Messages.UpdateArticles (Random.List.shuffle articles)
+    
+sortBy: List Article -> (Article -> Int) -> Cmd Msg
+sortBy articles func =
+    let 
+        sortedArticles = List.sortBy func articles
+    in 
+        Task.succeed (Messages.UpdateArticles sortedArticles) |> Task.perform identity
 
-sortValue: Article -> Int
-sortValue article =
+articleAddedMiliseconds: Article -> Int
+articleAddedMiliseconds article = 
     case article.added of
     Just d ->
         case Iso8601.toTime d of
         Ok t -> Time.posixToMillis t
         Err _ -> 0
     Nothing -> 0
+
+articleLength : Article -> Int
+articleLength article =
+    Maybe.withDefault 0 article.length
 
 filter: Cmd Msg
 filter = Task.succeed Messages.Filter |> Task.perform identity

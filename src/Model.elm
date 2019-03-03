@@ -11,15 +11,19 @@ type alias Model =
         tagsFilter : Maybe String,
         allArticles : List Article,
         maxLengthFilter : Maybe Int,
-        key : Nav.Key
+        key : Nav.Key,
+        ordering : Ordering
     }
+
+type Ordering = Longest | Shortest | Newest | Oldest | Random
 
 type alias ModelDto =
     {
         loginData : Maybe LoginData,
         tagsFilter : Maybe String,
         maxLengthFilter : Maybe Int,
-        allArticles : List Article
+        allArticles : List Article,
+        ordering : String
     }
 
 type alias LoginData =

@@ -19,3 +19,5 @@ type Msg
     | MaxLengthFilter String
     | Filter
     | SaveModel
+    | ChangeOrder Model.Ordering
+    | UpdateArticles (List Article)

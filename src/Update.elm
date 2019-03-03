@@ -11,6 +11,19 @@ port saveData : ModelDto -> Cmd msg
 saveModel: Cmd Msg
 saveModel = Task.succeed SaveModel |> Task.perform identity
 
+getModelDto: Model -> ModelDto
+getModelDto model = 
+    let 
+        ordering = 
+            case model.ordering of
+            Model.Longest -> "Longest" 
+            Model.Shortest -> "Shortest"
+            Model.Newest -> "Newest"  
+            Model.Oldest -> "Oldest"  
+            Model.Random -> "Random"  
+    in
+        ModelDto model.loginData model.tagsFilter model.maxLengthFilter model.allArticles ordering
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -25,7 +38,7 @@ update msg model =
         LoggedIn (Err _) -> 
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
-            ({ model | articles = sort articles, allArticles = articles}, Effects.filter )
+            ({ model | articles = articles, allArticles = articles}, Effects.filter )
         DownloadedArticles (Err e) -> 
             ( model, Cmd.none)
         GenerateRandomArticle -> 
@@ -43,9 +56,11 @@ update msg model =
 
         Filter -> 
             let
-                articles = sort (filterArticles model model.allArticles)
+                articles = filterArticles model model.allArticles
             in
-                ({model| articles = articles}, Cmd.batch [ randomizeArticles articles, saveModel])
-        SaveModel -> (model, saveData (ModelDto model.loginData model.tagsFilter model.maxLengthFilter model.allArticles))
+                ({model| articles = articles}, Cmd.batch [ sort articles model.ordering, randomizeArticles articles, saveModel])
+        SaveModel -> (model, saveData (getModelDto model))
+        ChangeOrder value -> ({model | ordering = value } , sort model.articles value)
+        UpdateArticles articles -> ( { model | articles = articles }, saveModel)
         LinkClicked _ -> ( model, Cmd.none)
         UrlChanged _ -> ( model, Cmd.none)
