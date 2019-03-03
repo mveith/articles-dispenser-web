@@ -59,7 +59,7 @@ articlesView model =
                                     radio "Oldest first" (model.ordering == Model.Oldest) (Messages.ChangeOrder Model.Oldest),
                                     radio "Longest first" (model.ordering == Model.Longest) (Messages.ChangeOrder Model.Longest),
                                     radio "Shortest first" (model.ordering == Model.Shortest) (Messages.ChangeOrder Model.Shortest),
-                                    radio "Randomize" (model.ordering == Model.Random) (Messages.ChangeOrder Model.Random)
+                                    radio "Randomized" (model.ordering == Model.Random) (Messages.ChangeOrder Model.Random)
                                 ]
                             ], 
                             div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
