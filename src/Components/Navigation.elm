@@ -15,7 +15,8 @@ navigationView loginData =
             Html.a [class "navbar-brand js-scroll-trigger", href "#page-top"] [text "ARTICLES DISPENSER"],
             Html.ul [class "navbar-nav ml-auto"]
             [
-                Html.li [class "nav-item"][ Html.a [class "nav-link js-scroll-trigger"][ text loginData.userName]]
+                Html.li [class "nav-item"][ Html.a [class "nav-link js-scroll-trigger"][ text loginData.userName]],
+                Html.li [class "nav-item logout"][ Html.a [onClick Messages.Logout, class "nav-link js-scroll-trigger"][ text "Log out"]]
             ]
         ]
     ]

@@ -62,5 +62,6 @@ update msg model =
         SaveModel -> (model, saveData (getModelDto model))
         ChangeOrder value -> ({model | ordering = value } , sort model.articles value)
         UpdateArticles articles -> ( { model | articles = articles }, saveModel)
+        Logout -> ({model| articles = [], allArticles = [], loginData = Nothing, randomArticle = Nothing, tagsFilter = Nothing, maxLengthFilter = Nothing, ordering = Model.Newest}, Cmd.batch [ saveModel, Effects.filter])
         LinkClicked _ -> ( model, Cmd.none)
         UrlChanged _ -> ( model, Cmd.none)

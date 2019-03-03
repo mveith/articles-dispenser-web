@@ -21,3 +21,4 @@ type Msg
     | SaveModel
     | ChangeOrder Model.Ordering
     | UpdateArticles (List Article)
+    | Logout
