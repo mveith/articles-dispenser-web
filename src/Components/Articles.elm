@@ -53,17 +53,15 @@ articlesView model =
                                 ]
                             ],
                             div [class "dispenser-buttons mb-2" ][ randomArticleButton model.randomArticle ],
-                            div [class "dispenser-buttons mb-2 text-left" ][                                 
-                                (buttonView "Newest first" (ChangeOrder Model.Newest)),
-                                text " ",
-                                (buttonView "Oldest first" (ChangeOrder Model.Oldest)),
-                                text " ",
-                                (buttonView "Longest first" (ChangeOrder Model.Longest)),
-                                text " ",
-                                (buttonView "Shortest first" (ChangeOrder Model.Shortest)),
-                                text " ",
-                                (buttonView "Randomize" (ChangeOrder Model.Random))
-                            ],
+                            div [class "ordering-radios mb-2 text-center"] [
+                                Html.fieldset [][
+                                    radio "Newest first" (model.ordering == Model.Newest) (Messages.ChangeOrder Model.Newest),
+                                    radio "Oldest first" (model.ordering == Model.Oldest) (Messages.ChangeOrder Model.Oldest),
+                                    radio "Longest first" (model.ordering == Model.Longest) (Messages.ChangeOrder Model.Longest),
+                                    radio "Shortest first" (model.ordering == Model.Shortest) (Messages.ChangeOrder Model.Shortest),
+                                    radio "Randomize" (model.ordering == Model.Random) (Messages.ChangeOrder Model.Random)
+                                ]
+                            ], 
                             div [class "list-group article-rows"] (List.indexedMap articleRow (List.reverse model.articles))
                         ],
                         div [class "statistics col-lg-3"] 
@@ -154,16 +152,19 @@ randomArticleButton article=
             ]
     Nothing -> div[][]
 
-buttonView : String -> Msg -> Html Msg
-buttonView label message =
-    Html.a 
+radio : String -> Bool -> Msg -> Html Msg
+radio value isChecked msg =
+  Html.label
+    [ ]
     [ 
-        onClick message, 
-        class "btn btn-outline-secondary", 
-        attribute "role" "button", 
-        attribute "aria-pressed" "true" 
+        Html.input 
+        [ 
+            type_ "radio",
+            onInput (\_ -> msg), 
+            Html.Attributes.checked isChecked 
+        ] [],
+        text value
     ]
-    [ text label]
 
 lengthView : Maybe Int -> String
 lengthView length =

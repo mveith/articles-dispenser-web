@@ -112,11 +112,11 @@ isArticleWithMaxLength maxLength article=
     Nothing -> True
 
 isValidTag: String -> Bool
-isValidTag tag=
+isValidTag tag =
     String.length tag > 0
 
 contains: List String -> String -> Bool
-contains tags tag=
+contains tags tag =
     if tag == "_untagged_" then List.isEmpty tags else List.member tag tags
 
 sort: List Article -> Model.Ordering -> Cmd Msg
