@@ -184,7 +184,7 @@ lengthView length =
 
 readLink : Article -> String
 readLink article =
-    "https://getpocket.com/a/read/" ++ article.id
+    "https://app.getpocket.com/read/" ++ article.id
 
 onEnter : Msg -> Html.Attribute Msg
 onEnter msg =
