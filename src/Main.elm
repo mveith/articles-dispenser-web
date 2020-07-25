@@ -38,7 +38,7 @@ init flags url key =
     _ ->
         case Json.decodeValue decodeModelDto flags of
         Ok modelDto -> initFromCache modelDto url key
-        Err e -> (initDefault (String.dropRight 1 (Url.toString url)) key, Cmd.none )
+        Err _ -> (initDefault (String.dropRight 1 (Url.toString url)) key, Cmd.none )
 
 initFromCache : ModelDto -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 initFromCache modelDto url key =
@@ -65,14 +65,15 @@ decodeModelDto =
 decodeArticles : Json.Decoder (List Model.Article)
 decodeArticles = 
     Json.list 
-        (Json.map7 Model.Article 
+        (Json.map8 Model.Article 
             (Json.field "url" Json.string)
             (Json.field "id" Json.string)
             (Json.field "title" Json.string)
             (Json.field "excerpt" Json.string)
             (Json.field "tags" (Json.list Json.string))
-            (Json.field "added" (Json.maybe (Json.string)))
-            (Json.field "length" (Json.maybe (Json.int))))
+            (Json.field "added" (Json.maybe  Json.string))
+            (Json.field "isArticle" Json.bool)
+            (Json.field "length" (Json.maybe  Json.int)))
 
 getOrdering : String -> Model.Ordering
 getOrdering str=

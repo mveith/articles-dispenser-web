@@ -67,13 +67,14 @@ downloadArticles accessToken =
 decodeArticles : Json.Decoder (List Article)
 decodeArticles = 
     Json.list 
-        (Json.map7 Article 
+        (Json.map8 Article 
             (Json.field "Url" Json.string)
             (Json.field "Id" Json.string)
             (Json.field "Title" Json.string)
             (Json.field "Excerpt" Json.string)
             (Json.field "Tags" (Json.list Json.string))
-            (Json.field "Added" (Json.maybe (Json.string)))
+            (Json.field "Added" (Json.maybe  Json.string))
+            (Json.field "IsArticle" Json.bool)
             (Json.map decodeInt (Json.maybe (Json.field "WordCount" Json.string))))
 
 decodeInt : Maybe String -> Maybe Int

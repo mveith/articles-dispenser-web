@@ -101,23 +101,31 @@ articleRow index article=
             Html.small [] 
             [
                 Html.strong [] [text "Tags: "], 
-                (text (String.join ", " article.tags))
+                text (String.join ", " article.tags)
             ]
         ],
-        Html.p [class "text-left mb-1"] 
+        Html.p [class "text-left mb-1"] (if article.isArticle then  
         [
             Html.small [] 
             [
                 Html.strong [] [text "Length: "], 
-                (text (lengthView article.length))
+                text (lengthView article.length)
             ]
-        ],
-        Html.span [ class "float-left article-links"] 
+        ]
+        else 
+        [
+            Html.small [] [ Html.strong [] [text "Not article." ]]
+        ]),
+        Html.span [ class "float-left article-links"] (if article.isArticle then  
         [
             Html.a [href article.url, target "_blank"] [Html.i [class "fa fa-link"][] ],
             text " ",
             Html.a [href (readLink article), target "_blank"] [Html.i [class "fa fa-get-pocket"][] ]
-        ],
+        ]
+        else 
+        [
+            Html.a [href article.url, target "_blank"] [Html.i [class "fa fa-link"][] ]   
+        ]),
         Html.span [ class "float-right"] 
         [
             Html.small [] [(text (dateView article.added))]
