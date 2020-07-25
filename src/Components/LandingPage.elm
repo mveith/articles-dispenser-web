@@ -1,14 +1,14 @@
 module Components.LandingPage exposing (..)
 
 import Html exposing (Html, text, div)
-import Html.Attributes exposing (src, class, href, target, id)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Model exposing (Model)
 import Messages exposing (Msg)
 
 
 landingPageView : Model -> Html Msg
-landingPageView model =
+landingPageView _ =
     Html.header [class "masthead h-100"] 
     [
         div [class "container h-100"]

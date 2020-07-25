@@ -1,8 +1,8 @@
 module View exposing (..)
 
 import Browser
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src, class, href, target, id)
+import Html exposing (div)
+import Html.Attributes exposing (class)
 import Model exposing (Model)
 import Messages exposing (Msg)
 import Components.Footer exposing (footerView)
@@ -16,7 +16,7 @@ view model =
     , body = 
         [ div [class "h-100"] 
             [
-                (case model.loginData of
+                 case model.loginData of
                     Just loginData -> 
                         div [] 
                         [
@@ -24,7 +24,7 @@ view model =
                             articlesView model
                         ]
                     Nothing -> 
-                        landingPageView model),
+                        landingPageView model,
                 footerView model
             ]
         ]

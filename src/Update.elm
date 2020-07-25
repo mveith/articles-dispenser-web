@@ -1,7 +1,7 @@
 port module Update exposing (..)
 
 import Browser.Navigation as Nav
-import Model exposing (Model, ModelDto, LoginData, Article)
+import Model exposing (Model, ModelDto)
 import Messages exposing (..)
 import Effects exposing (..)
 import Task
@@ -39,12 +39,12 @@ update msg model =
             ( model, Cmd.none)
         DownloadedArticles (Ok articles) -> 
             ({ model | articles = articles, allArticles = articles}, Effects.filter )
-        DownloadedArticles (Err e) -> 
+        DownloadedArticles ( Err _ ) -> 
             ( model, Cmd.none)
         GenerateRandomArticle -> 
             (model, randomizeArticles model.articles)
         RandomizedArticles a -> 
-            ( { model | randomArticle = (List.head a)}, Cmd.none)
+            ( { model | randomArticle =  List.head a}, Cmd.none)
         TagsFilter value -> ({model | tagsFilter = Just value } , Cmd.none)
         TagsFilterAndExecute value -> ({model | tagsFilter = Just value } , Effects.filter )
         MaxLengthFilter value -> 

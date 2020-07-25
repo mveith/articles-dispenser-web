@@ -8,7 +8,6 @@ import Random.List
 import Model exposing (Model, LoginData, Article)
 import Messages exposing (Msg)
 import Task
-import DateFormat
 import Iso8601
 import Time
 

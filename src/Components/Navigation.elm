@@ -1,7 +1,7 @@
 module Components.Navigation exposing (..)
 
 import Html exposing (Html, text, div)
-import Html.Attributes exposing (src, class, href, target, id)
+import Html.Attributes exposing (class, href, id)
 import Html.Events exposing (onClick)
 import Model exposing (LoginData)
 import Messages exposing (Msg)

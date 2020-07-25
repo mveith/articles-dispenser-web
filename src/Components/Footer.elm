@@ -1,12 +1,12 @@
 module Components.Footer exposing (..)
 
 import Html exposing (Html, text, div)
-import Html.Attributes exposing (src, class, href, target, id)
+import Html.Attributes exposing (class, href, target)
 import Model exposing (Model)
 import Messages exposing (Msg)
 
 footerView : Model -> Html Msg
-footerView model =
+footerView _ =
     Html.footer []
     [
         div [ class "container"] 

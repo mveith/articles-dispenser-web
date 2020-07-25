@@ -3,7 +3,7 @@ module Messages exposing (..)
 import Http
 import Browser
 import Url
-import Model exposing (Model, LoginData, Article)
+import Model exposing (LoginData, Article)
 
 type Msg
     = Login

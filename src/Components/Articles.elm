@@ -1,8 +1,8 @@
 module Components.Articles exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
+import Html exposing (Html, text, div, h1)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (src, class, href, target, id, attribute, value, type_, placeholder)
+import Html.Attributes exposing (class, href, target, id, attribute, value, type_, placeholder)
 import Model exposing (Model, Article)
 import Messages exposing (..)
 import Json.Decode as Json
@@ -18,7 +18,7 @@ articlesView model =
             div [class "container"]
             [
                 div [class "row"]
-                (if (not (List.isEmpty model.allArticles)) then 
+                (if  not (List.isEmpty model.allArticles) then 
                     [                        
                         div [class "col-lg-9" ]
                         [
@@ -73,7 +73,7 @@ articlesView model =
                                 text (String.fromInt (List.length model.allArticles) ++ " articles")
                             ],
                             Html.div [] 
-                            (if (List.length model.allArticles) == (List.length model.articles) then [] else
+                            (if  List.length model.allArticles == List.length model.articles then [] else
                             [
                                 Html.strong [] [text "Filtered: "],
                                 text (String.fromInt (List.length model.articles) ++ " articles")
@@ -92,7 +92,7 @@ articlesView model =
         ]
 
 articleRow: Int -> Article -> Html Msg
-articleRow index article=
+articleRow _ article=
     Html.div [class "list-group-item list-group-item-action flex-column align-items-start"] 
     [
         Html.h5 [class "mb-1 word-wrap article-title"][text article.title],
@@ -128,7 +128,7 @@ articleRow index article=
         ]),
         Html.span [ class "float-right"] 
         [
-            Html.small [] [(text (dateView article.added))]
+            Html.small [] [ text (dateView article.added)]
         ]
     ]
 
@@ -182,7 +182,7 @@ lengthView length =
         0 -> ""
         l ->
             let
-                minutes =  ceiling ((toFloat l) / 225)
+                minutes =  ceiling ( toFloat l / 225)
                 units = case minutes of 
                     1 -> "minute"
                     _ -> "minutes"
