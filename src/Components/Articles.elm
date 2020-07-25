@@ -114,7 +114,7 @@ articleRow index article=
         ]
         else 
         [
-            Html.small [] [ Html.strong [] [text "Not article." ]]
+            Html.small [] [ Html.strong [] [text "Cannot be parsed." ]]
         ]),
         Html.span [ class "float-left article-links"] (if article.isArticle then  
         [
