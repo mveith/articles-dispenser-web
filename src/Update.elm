@@ -20,7 +20,8 @@ getModelDto model =
             Model.Shortest -> "Shortest"
             Model.Newest -> "Newest"  
             Model.Oldest -> "Oldest"  
-            Model.Random -> "Random"  
+            Model.Random -> "Random"
+            Model.Smart -> "Smart"
     in
         ModelDto model.loginData model.tagsFilter model.maxLengthFilter model.allArticles ordering
 

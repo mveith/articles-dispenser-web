@@ -15,7 +15,7 @@ type alias Model =
         ordering : Ordering
     }
 
-type Ordering = Longest | Shortest | Newest | Oldest | Random
+type Ordering = Longest | Shortest | Newest | Oldest | Random | Smart
 
 type alias ModelDto =
     {

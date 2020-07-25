@@ -83,4 +83,5 @@ getOrdering str=
         "Newest" -> Model.Newest
         "Oldest" -> Model.Oldest
         "Random" -> Model.Random
+        "Smart" -> Model.Smart
         _ -> Model.Newest

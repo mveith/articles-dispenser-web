@@ -127,6 +127,7 @@ sort articles ordering =
     Model.Shortest -> sortBy articles (\a -> if articleLength a == 0 then -1000000 else -(articleLength a))
     Model.Oldest -> sortBy articles (\a -> -(articleAddedMiliseconds a))
     Model.Random -> Random.generate Messages.UpdateArticles (Random.List.shuffle articles)
+    Model.Smart -> sortBy articles smartScore
     
 sortBy: List Article -> (Article -> Int) -> Cmd Msg
 sortBy articles func =
@@ -143,6 +144,32 @@ articleAddedMiliseconds article =
         Ok t -> Time.posixToMillis t
         Err _ -> 0
     Nothing -> 0
+
+smartScore: Article -> Int
+smartScore article = 
+    let 
+        smart = 
+            if article.parsed then
+                case article.added of
+                Just d ->
+                    case Iso8601.toTime d of
+                    Ok t ->  
+                        let
+                            days = Time.posixToMillis t // 1000 // 60 // 60 // 24
+                            lengthOfArticle = Maybe.withDefault 10000 article.length
+                            lengthPenalty = 
+                                if lengthOfArticle < 450 then 90
+                                else if lengthOfArticle < 1125 then 0
+                                else if lengthOfArticle < 2250 then -90
+                                else if lengthOfArticle < 6750 then -180
+                                else -360
+                        in
+                            days + lengthPenalty
+                    Err _ -> 0
+                Nothing -> 0
+            else -1
+    in
+        smart
 
 articleLength : Article -> Int
 articleLength article =
