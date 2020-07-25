@@ -40,7 +40,7 @@ type alias Article =
         excerpt: String,
         tags: List String,
         added: Maybe String,
-        isArticle: Bool,
+        parsed: Bool,
         length: Maybe Int
     }
 

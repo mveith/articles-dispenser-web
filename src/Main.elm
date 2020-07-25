@@ -72,7 +72,7 @@ decodeArticles =
             (Json.field "excerpt" Json.string)
             (Json.field "tags" (Json.list Json.string))
             (Json.field "added" (Json.maybe  Json.string))
-            (Json.field "isArticle" Json.bool)
+            (Json.field "parsed" Json.bool)
             (Json.field "length" (Json.maybe  Json.int)))
 
 getOrdering : String -> Model.Ordering

@@ -104,7 +104,7 @@ articleRow _ article=
                 text (String.join ", " article.tags)
             ]
         ],
-        Html.p [class "text-left mb-1"] (if article.isArticle then  
+        Html.p [class "text-left mb-1"] (if article.parsed then  
         [
             Html.small [] 
             [
@@ -116,7 +116,7 @@ articleRow _ article=
         [
             Html.small [] [ Html.strong [] [text "Cannot be parsed." ]]
         ]),
-        Html.span [ class "float-left article-links"] (if article.isArticle then  
+        Html.span [ class "float-left article-links"] (if article.parsed then  
         [
             Html.a [href article.url, target "_blank"] [Html.i [class "fa fa-link"][] ],
             text " ",

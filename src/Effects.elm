@@ -84,7 +84,7 @@ decodeInt value =
     
 randomizeArticles: List Article -> Cmd Msg
 randomizeArticles articles =
-    Random.generate Messages.RandomizedArticles (Random.List.shuffle articles)
+    Random.generate Messages.RandomizedArticles (Random.List.shuffle (List.filter (\a -> a.parsed) articles))
 
 filterArticles: Model -> List Article -> List Article
 filterArticles model articles=
